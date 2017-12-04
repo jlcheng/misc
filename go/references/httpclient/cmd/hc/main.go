@@ -29,13 +29,23 @@ func main()  {
 
 	res := "{\"number\": 6, \"message\": \"success\", \"people\": [{\"name\": \"Sergey Ryazanskiy\", \"craft\": \"ISS\"}, {\"name\": \"Randy Bresnik\", \"craft\": \"ISS\"}, {\"name\": \"Paolo Nespoli\", \"craft\": \"ISS\"}, {\"name\": \"Alexander Misurkin\", \"craft\": \"ISS\"}, {\"name\": \"Mark Vande Hei\", \"craft\": \"ISS\"}, {\"name\": \"Joe Acaba\", \"craft\": \"ISS\"}]}"
 
-	people := &PeopleList{}
-	err := json.Unmarshal([]byte(res), people)
+	peopleList := make(map[string]interface{})
+	err := json.Unmarshal([]byte(res), &peopleList)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(*people)
+	bar := peopleList["people"]
+	foo := bar.([]interface{})[0]
+	foo1 := foo.(map[string]interface{})
+	foo1["name"] = "bob"
+	b, err := json.MarshalIndent(peopleList, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(string(b[:]))
 }
 
 func getUrl(url string) (string, error) {
