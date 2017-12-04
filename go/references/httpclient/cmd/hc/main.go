@@ -10,15 +10,6 @@ import (
 
 const API  = "http://api.open-notify.org/astros.json"
 
-type PeopleList struct {
-	Number int `json:Number`
-	People []People
-}
-
-type People struct {
-	Name string `json:String`
-}
-
 func main()  {
 
 	//res, err := getUrl("http://www.google.com/robots.txt")
@@ -29,17 +20,16 @@ func main()  {
 
 	res := "{\"number\": 6, \"message\": \"success\", \"people\": [{\"name\": \"Sergey Ryazanskiy\", \"craft\": \"ISS\"}, {\"name\": \"Randy Bresnik\", \"craft\": \"ISS\"}, {\"name\": \"Paolo Nespoli\", \"craft\": \"ISS\"}, {\"name\": \"Alexander Misurkin\", \"craft\": \"ISS\"}, {\"name\": \"Mark Vande Hei\", \"craft\": \"ISS\"}, {\"name\": \"Joe Acaba\", \"craft\": \"ISS\"}]}"
 
-	peopleList := make(map[string]interface{})
-	err := json.Unmarshal([]byte(res), &peopleList)
+	resultMap := make(map[string]interface{})
+	err := json.Unmarshal([]byte(res), &resultMap)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	bar := peopleList["people"]
-	foo := bar.([]interface{})[0]
-	foo1 := foo.(map[string]interface{})
-	foo1["name"] = "bob"
-	b, err := json.MarshalIndent(peopleList, "", "  ")
+	peopleList := resultMap["people"].([]interface{})
+	person := peopleList[0].(map[string]interface{})
+	person["name"] = "Joe Schmoe"
+	b, err := json.MarshalIndent(resultMap, "", "  ")
 	if err != nil {
 		fmt.Println(err)
 		return
